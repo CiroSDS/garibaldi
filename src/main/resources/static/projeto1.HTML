@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Produtos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Produtos</h1>
+    <form id="formProduto">
+        <label for="tipo">Tipo:</label>
+        <input type="text" id="tipo" name="tipo"><br><br>
+        <label for="marca">Marca:</label>
+        <input type="text" id="marca" name="marca"><br><br>
+        <label for="modelo">Modelo:</label>
+        <input type="text" id="modelo" name="modelo"><br><br>
+        <button type="submit">Cadastrar Produto</button>
+    </form>
+    <button onclick="listarProdutos()">Listar Produtos</button>
+    <div id="listaProdutos"></div>
+
+    <script>
+        const form = document.getElementById("formProduto");
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const tipo = document.getElementById("tipo").value;
+            const marca = document.getElementById("marca").value;
+            const modelo = document.getElementById("modelo").value;
+
+            fetch('/produtos', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    tipo: tipo,
+                    marca: marca,
+                    modelo: modelo
+                })
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error(error));
+        });
+
+        function listarProdutos() {
+            fetch('/produtos')
+            .then(response => response.json())
+            .then(data => {
+                const listaProdutos = document.getElementById("listaProdutos");
+                listaProdutos.innerHTML = "";
+                const table = document.createElement("table");
+                const thead = document.createElement("thead");
+                const tbody = document.createElement("tbody");
+
+                const trHead = document.createElement("tr");
+                const thTipo = document.createElement("th");
+                thTipo.textContent = "Tipo";
+                const thMarca = document.createElement("th");
+                thMarca.textContent = "Marca";
+                const thModelo = document.createElement("th");
+                thModelo.textContent = "Modelo";
+
+                trHead.appendChild(thTipo);
+                trHead.appendChild(thMarca);
+                trHead.appendChild(thModelo);
+                thead.appendChild(trHead);
+
+                data.forEach(produto => {
+                    const tr = document.createElement("tr");
+                    const tdTipo = document.createElement("td");
+                    tdTipo.textContent = produto.tipo;
+                    const tdMarca = document.createElement("td");
+                    tdMarca.textContent = produto.marca;
+                    const tdModelo = document.createElement("td");
+                    tdModelo.textContent = produto.modelo;
+
+                    tr.appendChild(tdTipo);
+                    tr.appendChild(tdMarca);
+                    tr.appendChild(tdModelo);
+                    tbody.appendChild(tr);
+                });
+
+                table.appendChild(thead);
+                table.appendChild(tbody);
+                listaProdutos.appendChild(table);
+            })
+            .catch(error => console.error(error));
+        }
+    </script>
+</body>
+</html>
