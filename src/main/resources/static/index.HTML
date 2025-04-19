@@ -27,7 +27,7 @@
                 data: document.getElementById("data").value
             };
 
-            await fetch("/api/produtos", {
+            await fetch("http://localhost:8080/api/produtos", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(produto)
@@ -37,7 +37,7 @@
         });
 
         async function carregarProdutos() {
-            const res = await fetch("/api/produtos");
+            const res = await fetch("http://localhost:8080/api/produtos");
             const produtos = await res.json();
             const lista = document.getElementById("listaProdutos");
             lista.innerHTML = "";

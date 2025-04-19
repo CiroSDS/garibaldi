@@ -9,6 +9,7 @@ public class ProdutoController {
         return produtoService.criarProduto(produto);
     }
 
+    @CrossOrigin
     @GetMapping
     public List<Produto> listarProdutos() {
         return produtoService.listarProdutos();
