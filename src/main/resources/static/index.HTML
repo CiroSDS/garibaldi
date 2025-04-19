@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Produtos - Garibaldi</title>
+</head>
+<body>
+    <h1>Cadastro de Produtos</h1>
+    <form id="formProduto">
+        <input type="text" id="tipo" placeholder="Tipo" required>
+        <input type="text" id="marca" placeholder="Marca" required>
+        <input type="text" id="modelo" placeholder="Modelo" required>
+        <input type="date" id="data" placeholder="Data" required>
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <h2>Lista de Produtos</h2>
+    <ul id="listaProdutos"></ul>
+
+    <script>
+        document.getElementById("formProduto").addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const produto = {
+                tipo: document.getElementById("tipo").value,
+                marca: document.getElementById("marca").value,
+                modelo: document.getElementById("modelo").value,
+                data: document.getElementById("data").value
+            };
+
+            await fetch("/api/produtos", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(produto)
+            });
+
+            carregarProdutos();
+        });
+
+        async function carregarProdutos() {
+            const res = await fetch("/api/produtos");
+            const produtos = await res.json();
+            const lista = document.getElementById("listaProdutos");
+            lista.innerHTML = "";
+            produtos.forEach(p => {
+                lista.innerHTML += `<li>${p.tipo} - ${p.marca} - ${p.modelo} (${p.data})</li>`;
+            });
+        }
+
+        carregarProdutos();
+    </script>
+</body>
+</html>
