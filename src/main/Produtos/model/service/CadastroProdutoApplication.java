@@ -1,5 +1,5 @@
 @Service
-public class CadastroProduto {
+public class CadastroProdutoApplication {
     
     @Autowired
     private ProdutoRepository produtoRepository;
